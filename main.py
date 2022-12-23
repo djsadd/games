@@ -1,5 +1,10 @@
 import requests
 
+token = 'e5ea37ef-112c-4055-82ac-ab6fa4affecb'
+url_first_round = 'https://datsanta.dats.team/api/round'
+headers = {"X-API-KEY": token, "Content-type": r"application/json"}
+
+
 santa_speed = 70  # Метры в секунду скорость
 santa_max_volume = 200  # киллограммы максимум которые влезут в сани
 santa_max_weight = 100  # объект в дм3 которые влезут в сани
@@ -14,7 +19,6 @@ def sort_stack_id(stack):
 
 current_weight = 0  # текущий вес
 current_volume = 0  # текущий вес
-token = 'e5ea37ef-112c-4055-82ac-ab6fa4affecb'
 
 good = []  # список где будут храниться успешно пройденные дома
 
@@ -40,3 +44,10 @@ for row in range(len(lst_children)):
         current_weight = current_weight + int(lst_gifts[row]['weight'])
         current_volume = current_volume + int(lst_gifts[row]['volume'])
         stack_id.append(lst_gifts[row]['id'])
+
+
+MAP_ID = 'faf7ef78-41b3-4a36-8423-688a61929c08.json'
+moves = []
+stackOfBags = []
+dt = requests.post(url_first_round, headers=headers)
+print(dt.json())
