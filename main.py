@@ -15,10 +15,10 @@ MAP_ID = 'faf7ef78-41b3-4a36-8423-688a61929c08.json'
 
 
 def sort_stack_id(stack):
-    stack_id = sorted(list(map(lambda x: lst_children[x], stack)), key=lambda x: x['x'] + x['y'])
-    print(stack_id)
-    print(list(map(lambda x: x['y'] + x['x'], stack_id)))
-    return stack_id
+    stacks_id = sorted(list(map(lambda x: lst_children[x], stack)), key=lambda x: x['x'] + x['y'])
+    print(stacks_id)
+    print(list(map(lambda x: x['y'] + x['x'], stacks_id)))
+    return stacks_id
 
 
 current_weight = 0  # текущий вес
@@ -69,7 +69,27 @@ for row in range(len(lst_children)):
     else:
         current_weight = current_weight + int(lst_gifts[row]['weight'])
         current_volume = current_volume + int(lst_gifts[row]['volume'])
-        stack_id.append(lst_gifts[row]['id'])
+        stack_id.append(lst_gifts[row]['id']-1)
+else:
+    if stack_id:
+        for i, res in enumerate(sort_stack_id(stack_id)):
+            while santa_coords_x != res['x'] and santa_coords_y != res['y']:
+                if santa_coords_x + santa_speed <= res['x']:
+                    santa_coords_x += santa_speed
+                elif santa_coords_x + santa_speed > res['x']:
+                    santa_coords_x = santa_coords_x + (res['x']-santa_coords_x)
+                else:
+                    santa_coords_x -= santa_speed
+
+                if santa_coords_y + santa_speed <= res['y']:
+                    santa_coords_y += santa_speed
+                elif santa_coords_y + santa_speed > res['y']:
+                    santa_coords_y = santa_coords_y + (res['y']-santa_coords_y)
+                else:
+                    santa_coords_y -= santa_speed
+            else:
+                moves.append({'x': res['x'], 'y': res['y']})
+        stackOfBags.append(list(map(lambda x: x+1, stack_id[::])))
 
 dt = requests.post(url_first_round, headers=headers)
 print(dt.json())
