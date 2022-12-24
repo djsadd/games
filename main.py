@@ -29,6 +29,7 @@ good = []  # список где будут храниться успешно п
 dt = requests.get('https://datsanta.dats.team/json/map/faf7ef78-41b3-4a36-8423-688a61929c08.json')  # запрос получаю АПИ
 lst_gifts = dt.json()['gifts']  # получаю объект гифтс (id, вес, объем)
 lst_children = dt.json()['children']  # получая объект состоящий из координатов домов детей
+
 stack_id = []
 for row in range(len(lst_children)):
     print(lst_gifts[row], lst_children[row], f"my stats: volume: {current_volume}, weight: {current_weight}")
@@ -39,7 +40,7 @@ for row in range(len(lst_children)):
                      'weight']) + current_weight > 200):  # если вес или объем будет превышен мы отправляем санту раздаваит подарки
 
         santa_coords_x, santa_coords_y = (0, 0)  # начинаем с нулевых координат
-        for res in sort_stack_id(stack_id):
+        for i, res in enumerate(sort_stack_id(stack_id)):
             while santa_coords_x != res['x'] and santa_coords_y != res['y']:
                 if santa_coords_x + santa_speed <= res['x']:
                     santa_coords_x += santa_speed
@@ -56,11 +57,15 @@ for row in range(len(lst_children)):
                     santa_coords_y -= santa_speed
             else:
                 moves.append({'x': res['x'], 'y': res['y']})
-
+        stackOfBags.append(stack_id[::])
         print('STOP', current_volume, current_weight, stack_id)
         current_weight = 0  # сбрасываем значения
         current_volume = 0  # сбросываем значения
         stack_id.clear()
+        # Добавляем элемент который пропускаем из-за того что закончилось место
+        current_weight = current_weight + int(lst_gifts[row]['weight'])
+        current_volume = current_volume + int(lst_gifts[row]['volume'])
+        stack_id.append(lst_gifts[row]['id'])
     else:
         current_weight = current_weight + int(lst_gifts[row]['weight'])
         current_volume = current_volume + int(lst_gifts[row]['volume'])
@@ -68,3 +73,5 @@ for row in range(len(lst_children)):
 
 dt = requests.post(url_first_round, headers=headers)
 print(dt.json())
+for row in stackOfBags:
+    print(row)
