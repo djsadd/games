@@ -2,7 +2,7 @@ import requests
 
 token = 'e5ea37ef-112c-4055-82ac-ab6fa4affecb'
 url_first_round = 'https://datsanta.dats.team/api/round'
-headers = {"X-API-KEY": token, "Content-type": r"application/json"}
+headers = {"X-API-KEY": token}
 
 
 santa_speed = 70  # Метры в секунду скорость
